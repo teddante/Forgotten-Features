@@ -41,7 +41,15 @@ Codex can usually handle:
 - Preparing commits, release notes, tags, and PR text when asked.
 - Comparing implementation behavior against documented evidence.
 
-Ask the user before actions that publish, push, create releases, upload to mod platforms, install new dependencies from the network, or require account credentials.
+Ask the user before actions that publish, push, create releases, upload to mod platforms, install new dependencies from the network, or require account credentials. Build artifacts are copied to local test launchers when useful, but jar files are not committed.
+
+## Local Environment
+
+Use local environment variables instead of hardcoding machine-specific paths:
+
+- `FORGOTTEN_FEATURES_PRISM_INSTANCE`: optional Prism Launcher instance path for local jar copy/testing.
+
+The repo includes `.env.example`, but real `.env` files stay ignored.
 
 ## Verification Loop
 
@@ -54,6 +62,8 @@ Before handing work back:
 5. Commit only after the branch is coherent and checks pass.
 
 Prefer automation over asking the user to test. Use manual in-game testing for visuals, feel, compatibility, and things a command-line check cannot prove.
+
+Use `scripts/verify.ps1` for the normal local build/check loop. Use `scripts/verify.ps1 -CopyToPrism` when a configured Prism instance should receive the latest playable jar.
 
 ## Local Minecraft Research
 
@@ -74,6 +84,20 @@ When a useful fact is found, write the fact into `docs/feature-candidates.md` or
 - Make a commit at each useful checkpoint: repo docs, build skeleton, config system, one feature, one bug fix.
 - Do not mix unrelated feature work in the same commit.
 - Before finalizing, run the relevant Gradle build/test command once a build exists.
+- Open or draft a pull request when a branch is coherent enough to review. Do not create releases from feature branches.
+
+## Issues, PRs, and Releases
+
+- Create an issue when work needs discussion, historical evidence, compatibility reports, or user-facing scope decisions.
+- Skip the issue for tiny obvious fixes, docs cleanup, or follow-up changes already covered by the current branch.
+- Open a PR when a branch has a focused set of commits, passing checks, and a clear summary.
+- Bump versions only for release preparation, not every feature commit.
+- Update `CHANGELOG.md` with user-visible changes as they happen, then tidy it during release prep.
+- Create releases from `main` after merge, build verification, changelog review, and explicit user approval.
+
+## Research and Web Sources
+
+Browse when facts may have changed, when official loader/API guidance matters, or when historical claims need better sourcing. Prefer official docs, Minecraft Wiki pages, mod loader docs, and local Minecraft jars/caches over unsourced memory.
 
 ## First Technical Direction
 

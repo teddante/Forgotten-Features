@@ -107,7 +107,7 @@ Local Codex work should run the same Gradle checks before a PR or release.
 The default local verification loop is:
 
 1. Compile while implementing.
-2. Run `./gradlew build --no-daemon` before commit.
+2. Run `scripts/verify.ps1` or `./gradlew build --no-daemon` before commit.
 3. Check the built jar contains expected assets/data when resources changed.
 4. Copy the jar into the configured Prism Launcher instance for quick player testing.
 5. Add a command, test, or data check when a feature would otherwise be awkward to verify.
@@ -121,6 +121,14 @@ Good automated checks include:
 - Server/startup smoke tests once they are worth the maintenance cost.
 
 Manual testing should focus on what automation cannot judge well: visual quality, game feel, sound, UI clarity, modpack behavior, and whether the feature is fun.
+
+Local helper scripts:
+
+- `scripts/verify.ps1`: runs the Gradle build and checks expected jar contents.
+- `scripts/verify.ps1 -CopyToPrism`: also copies the playable jar to the configured Prism instance.
+- `scripts/copy-to-prism.ps1`: copies the latest playable jar after a build.
+
+Set `FORGOTTEN_FEATURES_PRISM_INSTANCE` locally, or pass `-PrismInstancePath` / `-InstancePath`.
 
 ## Config and Toggles
 
@@ -178,6 +186,20 @@ Issues are lightweight:
 
 An issue should answer: what is wanted, what evidence exists, what "done" means, and whether it affects client, server, or worldgen.
 
+Create an issue when:
+
+- The scope needs discussion.
+- Historical evidence needs review.
+- Compatibility behavior is unclear.
+- A user reports a bug or crash.
+- The feature spans multiple commits or likely needs review from others.
+
+Skip the issue when:
+
+- The work is a tiny obvious fix.
+- The change is documentation cleanup.
+- The work is already part of the active feature branch.
+
 Pull requests are also lightweight:
 
 - One feature, bug, or infrastructure change per PR.
@@ -206,8 +228,17 @@ Commit when a meaningful checkpoint is complete:
 - One feature.
 - One bug fix.
 - One docs cleanup.
+- One verification/tooling improvement.
 
 Avoid huge mixed commits. A future AI agent should be able to read a commit and understand exactly why it exists.
+
+Do not commit:
+
+- Built mod jars.
+- Old Minecraft jars.
+- Decompiled Minecraft source.
+- Local launcher instances.
+- `.env` or machine-specific config.
 
 ## Versioning and Releases
 
@@ -217,6 +248,8 @@ Use simple semantic mod versions:
 - `0.2.0` new feature batch.
 - `0.2.1` bug fix.
 - `1.0.0` stable enough for normal players and modpacks.
+
+Version bumps happen during release prep, not during every feature commit. Feature branches update `CHANGELOG.md`; release prep updates `mod_version`, finalizes the changelog entry, and tags the commit.
 
 Release files should include mod ID, loader, Minecraft version, and mod version:
 
@@ -228,11 +261,17 @@ forgotten-features-forge-1.20.1-0.1.0.jar
 
 Release flow:
 
-1. Build and test locally.
-2. Tag the release, such as `v0.1.0`.
-3. Create one GitHub release containing all loader jars for that mod version.
-4. Publish matching files to Modrinth and CurseForge once the project is ready.
-5. Keep the changelog short and user-facing.
+1. Merge feature branches to `main`.
+2. Review `CHANGELOG.md`.
+3. Bump `mod_version` and release file naming if needed.
+4. Run `scripts/verify.ps1`.
+5. Commit release prep.
+6. Tag the release, such as `v0.1.0`.
+7. Create one GitHub release containing all loader jars for that mod version.
+8. Publish matching files to Modrinth and CurseForge once the project is ready.
+9. Keep release notes short and user-facing.
+
+Create a release only with explicit user approval.
 
 ## Codex and AI Workflow
 
@@ -254,8 +293,10 @@ Recommended Codex loop:
 2. Create or use a focused branch.
 3. Implement one scoped task.
 4. Run the smallest meaningful check while iterating.
-5. Run the full build before commit.
+5. Run `scripts/verify.ps1` or the full Gradle build before commit.
 6. Copy the playable jar to the configured launcher instance when useful.
 7. Update docs/candidates if behavior decisions changed.
 8. Commit only when the checkpoint is coherent.
 9. Open or update a PR when asked.
+
+Browse the web when official/current facts matter. For historical features, combine the raw wiki archive, current Minecraft Wiki pages, official posts where available, and local old-version research. Record useful evidence in the feature docs rather than relying on chat memory.
