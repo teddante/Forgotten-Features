@@ -35,6 +35,7 @@ The current version adds:
 - Common item tags for Ruby gems, ores, and storage blocks
 - Config-backed creative tab visibility
 - Mod Menu config screen toggles when Mod Menu is installed
+- Admin verification command: `/forgottenfeatures findrubyore [radius]`
 
 Ruby content is always registered for world safety. Disabling the feature hides it from this mod's creative-tab injection and prevents new Ruby Ore generation on the next startup, rather than removing registry IDs.
 

@@ -1,6 +1,7 @@
 package io.github.teddante.forgottenfeatures;
 
 import io.github.teddante.forgottenfeatures.config.ForgottenFeaturesConfig;
+import io.github.teddante.forgottenfeatures.command.ForgottenFeaturesCommands;
 import io.github.teddante.forgottenfeatures.registry.ForgottenFeaturesBlocks;
 import io.github.teddante.forgottenfeatures.registry.ForgottenFeaturesItems;
 import io.github.teddante.forgottenfeatures.registry.ForgottenFeaturesWorldgen;
@@ -20,6 +21,7 @@ public final class ForgottenFeatures implements ModInitializer {
         ForgottenFeaturesBlocks.initialize();
         ForgottenFeaturesItems.initialize(config);
         ForgottenFeaturesWorldgen.initialize(config);
+        ForgottenFeaturesCommands.initialize();
         LOGGER.info("Forgotten Features initialized");
     }
 

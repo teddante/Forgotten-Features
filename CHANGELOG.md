@@ -11,3 +11,4 @@ This project intends to use semantic versioning for the mod version, with Minecr
 - Added Mod Menu integration for in-game Ruby toggles when Mod Menu is installed.
 - Expanded Ruby into a survival-friendly item/block/ore set with recipes, loot tables, tags, and placeholder original textures.
 - Added Ruby Ore generation in mountain biomes behind the Ruby ore-generation config toggle.
+- Added `/forgottenfeatures findrubyore [radius]` for quick Ruby Ore generation checks.
