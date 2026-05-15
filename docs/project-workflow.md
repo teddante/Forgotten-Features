@@ -177,6 +177,8 @@ Manual in-game testing should be saved for things automation cannot see well: fe
 
 ## GitHub Workflow
 
+See `docs/github-setup.md` for repository settings, branch protection, tags, and releases.
+
 Issues are lightweight:
 
 - Historical feature idea.
@@ -241,6 +243,8 @@ Do not commit:
 - `.env` or machine-specific config.
 
 ## Versioning and Releases
+
+See `docs/github-setup.md` for the GitHub-side tag and release setup.
 
 Use simple semantic mod versions:
 

@@ -23,6 +23,8 @@ Historically faithful, clean-room recreations of removed, unused, shelved, and d
 
 `AGENTS.md` gives short working rules for Codex and other AI agents so automated development, testing, commits, and launcher test builds stay consistent.
 
+`docs/github-setup.md` explains recommended branch protection, issues, PRs, tags, and releases.
+
 ## Planned Loader Targets
 
 | Target | Role | Notes |
