@@ -12,5 +12,6 @@ This project intends to use semantic versioning for the mod version, with Minecr
 - Expanded Ruby into a survival-friendly item/block/ore set with recipes, loot tables, tags, and placeholder original textures.
 - Added Ruby Ore generation in mountain biomes behind the Ruby ore-generation config toggle.
 - Added `/forgottenfeatures findrubyore [radius]` for quick Ruby Ore generation checks.
+- Reworked the Ruby item icon as a clean-room recreation informed by local official-jar reference assets.
 - Tightened agent and project workflow docs around automated verification and launcher test builds.
 - Added local verification and Prism-copy scripts, plus clearer issue/PR/version/release workflow guidance.

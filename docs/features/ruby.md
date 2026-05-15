@@ -16,6 +16,8 @@ Ruby is the first implementation slice for Forgotten Features: a faithful starte
 
 `docs/allfeaturesfromwiki.md` notes that rubies were intended as the original trading currency, appeared in Jeb's May 21, 2012 trading screenshot, and were replaced by emeralds because Dinnerbone is red-green colorblind. The raw archive also notes that a ruby texture remained in files after emeralds were implemented.
 
+Local reference checks were made against official client jars in ignored `.research/` storage. Java Edition 14w34b and 1.16.5 both contain an unused `ruby.png`; 14w34b also provides the old emerald assets used for comparison. These original assets are used only as private reference material and are not committed.
+
 ## Current Scope
 
 The current version adds:
@@ -25,7 +27,7 @@ The current version adds:
 - `forgottenfeatures:ruby_ore`
 - `forgottenfeatures:deepslate_ruby_ore`
 - English item name
-- Block/item models and original placeholder textures
+- Block/item models and original clean-room textures
 - Ruby Block crafting and uncrafting recipes
 - Ruby Ore and Deepslate Ruby Ore smelting/blasting recipes
 - Ore loot tables that mirror Emerald Ore behavior for Silk Touch, Fortune, and explosions
@@ -44,4 +46,4 @@ Ruby content is always registered for world safety. Disabling the feature hides 
 Possible next steps after the first playable slice:
 
 - Add villager/trading behavior if a faithful design can be supported cleanly.
-- Compare item texture more carefully against historical screenshots without copying Mojang assets.
+- Compare the current clean-room Ruby icon against more old-version screenshots and improve it if the silhouette still feels off.
