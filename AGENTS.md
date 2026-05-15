@@ -41,7 +41,7 @@ Codex can usually handle:
 - Preparing commits, release notes, tags, and PR text when asked.
 - Comparing implementation behavior against documented evidence.
 
-Ask the user before actions that publish, push, create releases, upload to mod platforms, install new dependencies from the network, or require account credentials. Build artifacts are copied to local test launchers when useful, but jar files are not committed.
+Ask the user before actions that publish, push, create releases, upload to mod platforms, install new dependencies from the network, or require account credentials. Build artifacts can be copied to local test launchers when useful, but jar files are not committed.
 
 ## Local Environment
 
@@ -85,6 +85,7 @@ When a useful fact is found, write the fact into `docs/feature-candidates.md` or
 - Do not mix unrelated feature work in the same commit.
 - Before finalizing, run the relevant Gradle build/test command once a build exists.
 - Open or draft a pull request when a branch is coherent enough to review. Do not create releases from feature branches.
+- Follow `docs/github-setup.md` for branch protection, tags, and releases.
 
 ## Issues, PRs, and Releases
 
