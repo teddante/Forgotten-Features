@@ -19,6 +19,7 @@ final class ForgottenFeaturesConfigTest {
 
         assertTrue(config.features.ruby.enabled);
         assertTrue(config.features.ruby.showInCreativeTab);
+        assertTrue(config.features.ruby.generateOre);
         assertTrue(Files.exists(configPath));
     }
 
@@ -28,18 +29,20 @@ final class ForgottenFeaturesConfigTest {
         Files.writeString(configPath, """
                 {
                   "features": {
-                    "ruby": {
-                      "enabled": false,
-                      "showInCreativeTab": false
+                      "ruby": {
+                        "enabled": false,
+                        "showInCreativeTab": false,
+                        "generateOre": false
+                      }
                     }
                   }
-                }
                 """);
 
         ForgottenFeaturesConfig config = ForgottenFeaturesConfig.load(configPath);
 
         assertFalse(config.features.ruby.enabled);
         assertFalse(config.features.ruby.showInCreativeTab);
+        assertFalse(config.features.ruby.generateOre);
     }
 
     @Test
@@ -52,6 +55,6 @@ final class ForgottenFeaturesConfigTest {
         assertNotNull(config.features);
         assertNotNull(config.features.ruby);
         assertTrue(config.features.ruby.enabled);
+        assertTrue(config.features.ruby.generateOre);
     }
 }
-

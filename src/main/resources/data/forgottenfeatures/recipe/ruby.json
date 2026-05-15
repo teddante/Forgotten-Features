@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "forgottenfeatures:ruby_block"
+  ],
+  "result": {
+    "count": 9,
+    "id": "forgottenfeatures:ruby"
+  }
+}
+

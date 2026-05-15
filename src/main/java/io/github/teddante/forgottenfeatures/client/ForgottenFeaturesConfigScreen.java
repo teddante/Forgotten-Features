@@ -68,6 +68,19 @@ public final class ForgottenFeaturesConfigScreen extends Screen {
                 })
                 .build());
 
+        addRenderableWidget(Checkbox.builder(
+                        Component.translatable("option.forgottenfeatures.ruby.generate_ore"),
+                        this.font
+                )
+                .pos(left, top + 124)
+                .maxWidth(310)
+                .selected(config.features.ruby.generateOre)
+                .onValueChange((checkbox, selected) -> {
+                    config.features.ruby.generateOre = selected;
+                    save();
+                })
+                .build());
+
         addRenderableWidget(Button.builder(
                         Component.translatable("button.forgottenfeatures.done"),
                         button -> onClose()

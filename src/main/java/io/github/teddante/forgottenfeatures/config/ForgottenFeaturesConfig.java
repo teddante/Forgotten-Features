@@ -77,5 +77,6 @@ public final class ForgottenFeaturesConfig {
     public static final class RubyFeature {
         public boolean enabled = true;
         public boolean showInCreativeTab = true;
+        public boolean generateOre = true;
     }
 }

@@ -23,6 +23,9 @@ public final class ForgottenFeaturesItems {
             ForgottenFeaturesConfig currentConfig = ForgottenFeatures.config();
             if (currentConfig.features.ruby.enabled && currentConfig.features.ruby.showInCreativeTab) {
                 entries.accept(RUBY);
+                entries.accept(ForgottenFeaturesBlocks.RUBY_BLOCK);
+                entries.accept(ForgottenFeaturesBlocks.RUBY_ORE);
+                entries.accept(ForgottenFeaturesBlocks.DEEPSLATE_RUBY_ORE);
             }
         });
     }
