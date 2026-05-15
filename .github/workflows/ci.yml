@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  hygiene:
+    name: Basic hygiene
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check required files and blocked binaries
+        shell: pwsh
+        run: |
+          $required = @(
+            "README.md",
+            "LICENSE",
+            "CONTRIBUTING.md",
+            "docs/legal.md",
+            "docs/feature-candidates.md",
+            "docs/allfeaturesfromwiki.md"
+          )
+
+          foreach ($path in $required) {
+            if (-not (Test-Path $path)) {
+              Write-Error "Missing required file: $path"
+            }
+          }
+
+          $blocked = Get-ChildItem -Recurse -File |
+            Where-Object {
+              $_.FullName -notmatch "[/\\]\.git[/\\]" -and
+              (
+                $_.Name -match "^minecraft.*\.jar$" -or
+                $_.Name -match "client.*\.jar$" -or
+                $_.Name -match "server.*\.jar$"
+              )
+            }
+
+          if ($blocked) {
+            $blocked | ForEach-Object { Write-Error "Do not commit Minecraft jars or binaries: $($_.FullName)" }
+          }
+
+      - name: Set up Java when Gradle exists
+        if: hashFiles('gradlew') != ''
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - name: Build when Gradle exists
+        if: hashFiles('gradlew') != ''
+        shell: bash
+        run: ./gradlew build --no-daemon

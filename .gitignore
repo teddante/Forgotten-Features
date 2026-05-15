@@ -1,0 +1,49 @@
+# Gradle
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# VS Code
+.vscode/
+
+# Minecraft and modding output
+run/
+runs/
+logs/
+crash-reports/
+*.jar
+*.jar.disabled
+*.litemod
+*.hprof
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local scratch
+.env
+.env.*
+*.local
+.tmp/
+tmp/
+
+# Local Minecraft research, never committed
+.research/
+local-research/
+decompiled-minecraft/
+minecraft-jars/
