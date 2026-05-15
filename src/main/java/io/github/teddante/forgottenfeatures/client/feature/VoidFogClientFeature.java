@@ -6,7 +6,9 @@ import io.github.teddante.forgottenfeatures.registry.ForgottenFeaturesParticles;
 import java.util.Locale;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Camera;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -18,11 +20,7 @@ import net.minecraft.world.phys.Vec3;
 
 public final class VoidFogClientFeature {
     private static final double COLOR_FACTOR = 0.03125D;
-    private static final double DISTANCE_VERTICAL_OFFSET = 4.0D;
-    private static final double DISTANCE_HEIGHT_FACTOR = 32.0D;
-    private static final float DISTANCE_FADE_RANGE = 0.35F;
-    private static final float FOG_DISTANCE_SCALE = 100.0F;
-    private static final float MIN_FOG_DISTANCE = 5.0F;
+    private static final float MAX_OVERLAY_ALPHA = 0.72F;
     private static final int PARTICLE_RANGE = 16;
     private static final int PARTICLE_ATTEMPTS = 180;
     private static final int PARTICLE_RANDOM_HEIGHT = 8;
@@ -46,12 +44,11 @@ public final class VoidFogClientFeature {
         double relativeY = camera.position().y() - minecraft.level.getMinY();
         int skyLight = minecraft.level.getBrightness(LightLayer.SKY, pos);
         float color = colorStrength(minecraft.level, camera);
-        float endAtShortDistance = distanceLimit(minecraft.level, camera, 96.0F);
-        float endAtLongDistance = distanceLimit(minecraft.level, camera, 512.0F);
+        float overlayAlpha = overlayAlpha(minecraft.level, camera);
 
         return Component.literal(String.format(
                 Locale.ROOT,
-                "Void Fog: enabled=%s particles=%s fluid=%s y=%.2f relativeY=%.2f sky=%d color=%.0f%% end@96=%.1f end@512=%.1f",
+                "Void Fog: enabled=%s particles=%s fluid=%s y=%.2f relativeY=%.2f sky=%d color=%.0f%% overlay=%.0f%% distance=unchanged",
                 config.enabled,
                 config.particles,
                 camera.getFluidInCamera(),
@@ -59,8 +56,7 @@ public final class VoidFogClientFeature {
                 relativeY,
                 skyLight,
                 color * 100.0F,
-                endAtShortDistance,
-                endAtLongDistance
+                overlayAlpha * 100.0F
         ));
     }
 
@@ -79,26 +75,6 @@ public final class VoidFogClientFeature {
         return smooth((float) (1.0D - factor * factor));
     }
 
-    public static float distanceLimit(ClientLevel level, Camera camera, float originalEnd) {
-        ForgottenFeaturesConfig.VoidFogFeature config = ForgottenFeatures.config().features.voidFog;
-        if (!canApply(config, level, camera)) {
-            return originalEnd;
-        }
-
-        BlockPos pos = camera.blockPosition();
-        double skyLight = level.getBrightness(LightLayer.SKY, pos) / 16.0D;
-        double relativeY = camera.position().y() - level.getMinY();
-        double factor = skyLight + (relativeY + DISTANCE_VERTICAL_OFFSET) / DISTANCE_HEIGHT_FACTOR;
-        if (factor >= 1.0D) {
-            return originalEnd;
-        }
-
-        factor = Mth.clamp(factor, 0.0D, 1.0D);
-        float targetEnd = Math.max(MIN_FOG_DISTANCE, FOG_DISTANCE_SCALE * (float) (factor * factor));
-        float fade = smooth((float) ((1.0D - factor) / DISTANCE_FADE_RANGE));
-        return Mth.lerp(fade, originalEnd, Math.min(originalEnd, targetEnd));
-    }
-
     public static int fogColor(ClientLevel level, Camera camera, int originalColor, float strength) {
         int originalRed = (originalColor >> 16) & 0xFF;
         int originalGreen = (originalColor >> 8) & 0xFF;
@@ -107,8 +83,23 @@ public final class VoidFogClientFeature {
         return (neutral << 16) | (neutral << 8) | neutral;
     }
 
-    public static float fogStart(float originalStart, float fogEnd) {
-        return Math.min(originalStart, fogEnd * 0.25F);
+    private static float overlayAlpha(ClientLevel level, Camera camera) {
+        return colorStrength(level, camera) * MAX_OVERLAY_ALPHA;
+    }
+
+    public static void renderOverlay(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.level == null || minecraft.player == null || minecraft.options.hideGui) {
+            return;
+        }
+
+        float alpha = overlayAlpha(minecraft.level, minecraft.gameRenderer.getMainCamera());
+        if (alpha <= 0.0F) {
+            return;
+        }
+
+        int alphaByte = Mth.clamp(Math.round(alpha * 255.0F), 0, 255);
+        graphics.fill(0, 0, graphics.guiWidth(), graphics.guiHeight(), alphaByte << 24);
     }
 
     private static void spawnParticles(Minecraft minecraft) {

@@ -19,3 +19,4 @@ This project intends to use semantic versioning for the mod version, with Minecr
 - Smoothed Void Fog's modern renderer integration to avoid sudden transitions and sky/cloud fog artifacts.
 - Added a custom suspended void-fog particle and `/ffvoidfog` client diagnostics for renderer compatibility checks.
 - Stopped Void Fog from changing render-distance fog so optimization mods do not cull terrain and reveal sky.
+- Moved Void Fog to a renderer-safe visual overlay and removed FogData distance edits entirely.
