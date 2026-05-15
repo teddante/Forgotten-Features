@@ -102,6 +102,26 @@ Once the Gradle skeleton exists, CI should run:
 
 Local Codex work should run the same Gradle checks before a PR or release.
 
+## Automated Verification
+
+The default local verification loop is:
+
+1. Compile while implementing.
+2. Run `./gradlew build --no-daemon` before commit.
+3. Check the built jar contains expected assets/data when resources changed.
+4. Copy the jar into the configured Prism Launcher instance for quick player testing.
+5. Add a command, test, or data check when a feature would otherwise be awkward to verify.
+
+Good automated checks include:
+
+- Unit tests for config defaults, parsing, and feature toggles.
+- Build-time compilation against current Minecraft/Fabric APIs.
+- Jar content checks for expected models, textures, recipes, loot tables, tags, and worldgen files.
+- Lightweight in-game commands for hard-to-see systems such as generation or spawning.
+- Server/startup smoke tests once they are worth the maintenance cost.
+
+Manual testing should focus on what automation cannot judge well: visual quality, game feel, sound, UI clarity, modpack behavior, and whether the feature is fun.
+
 ## Config and Toggles
 
 Every gameplay feature should have:
@@ -164,6 +184,7 @@ Pull requests are also lightweight:
 - Link the issue if there is one.
 - Include a short test/manual-check note.
 - Update `docs/feature-candidates.md` or `docs/features/` if historical behavior changed.
+- Mention where the playable jar was copied when using a local launcher test instance.
 
 Codex can manage this workflow end-to-end when the user asks: create or switch branches, edit files, run checks, stage changes, write commits, inspect CI, fix failures, and draft PR descriptions. Publishing or pushing should still be an explicit user decision.
 
@@ -232,7 +253,9 @@ Recommended Codex loop:
 1. Read `AGENTS.md` and the relevant workflow/docs.
 2. Create or use a focused branch.
 3. Implement one scoped task.
-4. Run the smallest meaningful check.
-5. Update docs/candidates if behavior decisions changed.
-6. Commit only when the checkpoint is coherent.
-7. Open or update a PR when asked.
+4. Run the smallest meaningful check while iterating.
+5. Run the full build before commit.
+6. Copy the playable jar to the configured launcher instance when useful.
+7. Update docs/candidates if behavior decisions changed.
+8. Commit only when the checkpoint is coherent.
+9. Open or update a PR when asked.

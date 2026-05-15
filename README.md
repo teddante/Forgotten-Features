@@ -21,6 +21,8 @@ Historically faithful, clean-room recreations of removed, unused, shelved, and d
 
 `docs/project-workflow.md` explains how issues, branches, commits, releases, loader choices, compatibility, and AI/Codex work should fit together.
 
+`AGENTS.md` gives short working rules for Codex and other AI agents so automated development, testing, commits, and launcher test builds stay consistent.
+
 ## Planned Loader Targets
 
 | Target | Role | Notes |

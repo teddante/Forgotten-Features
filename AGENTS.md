@@ -28,6 +28,7 @@ When recreating old behavior, copy the observed behavior and important values in
 - Keep client-only code out of common/server paths.
 - Keep loader-specific code thin.
 - Do not add a dependency just because it is convenient once. Add it when it clearly reduces maintenance.
+- Add debug or verification helpers when a feature is hard to test manually, but keep them scoped and useful.
 
 ## What Agents Can Own
 
@@ -41,6 +42,18 @@ Codex can usually handle:
 - Comparing implementation behavior against documented evidence.
 
 Ask the user before actions that publish, push, create releases, upload to mod platforms, install new dependencies from the network, or require account credentials.
+
+## Verification Loop
+
+Before handing work back:
+
+1. Run the smallest useful check while developing.
+2. Run the full Gradle build when Java/resources/data changed.
+3. Inspect the built jar when adding resources, data files, or generated assets.
+4. Copy the latest playable jar to the user's configured launcher instance when available.
+5. Commit only after the branch is coherent and checks pass.
+
+Prefer automation over asking the user to test. Use manual in-game testing for visuals, feel, compatibility, and things a command-line check cannot prove.
 
 ## Local Minecraft Research
 
@@ -57,7 +70,7 @@ When a useful fact is found, write the fact into `docs/feature-candidates.md` or
 
 ## Git Workflow
 
-- Use short branches such as `feature/ruby`, `feature/giant`, `docs/candidates`, or `infra/mod-skeleton`.
+- Use short branches such as `feature/<name>`, `docs/<topic>`, `infra/<topic>`, or `fix/<bug>`.
 - Make a commit at each useful checkpoint: repo docs, build skeleton, config system, one feature, one bug fix.
 - Do not mix unrelated feature work in the same commit.
 - Before finalizing, run the relevant Gradle build/test command once a build exists.
