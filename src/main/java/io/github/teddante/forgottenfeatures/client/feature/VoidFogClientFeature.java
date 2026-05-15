@@ -2,12 +2,14 @@ package io.github.teddante.forgottenfeatures.client.feature;
 
 import io.github.teddante.forgottenfeatures.ForgottenFeatures;
 import io.github.teddante.forgottenfeatures.config.ForgottenFeaturesConfig;
+import io.github.teddante.forgottenfeatures.registry.ForgottenFeaturesParticles;
+import java.util.Locale;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.Level;
@@ -18,6 +20,7 @@ public final class VoidFogClientFeature {
     private static final double COLOR_FACTOR = 0.03125D;
     private static final double DISTANCE_VERTICAL_OFFSET = 4.0D;
     private static final double DISTANCE_HEIGHT_FACTOR = 32.0D;
+    private static final float DISTANCE_FADE_RANGE = 0.35F;
     private static final float FOG_DISTANCE_SCALE = 100.0F;
     private static final float MIN_FOG_DISTANCE = 5.0F;
     private static final int PARTICLE_RANGE = 16;
@@ -30,6 +33,35 @@ public final class VoidFogClientFeature {
 
     public static void initialize() {
         ClientTickEvents.END_CLIENT_TICK.register(VoidFogClientFeature::spawnParticles);
+    }
+
+    public static Component diagnosticMessage(Minecraft minecraft) {
+        if (minecraft.level == null) {
+            return Component.literal("Void Fog: no client level loaded.");
+        }
+
+        ForgottenFeaturesConfig.VoidFogFeature config = ForgottenFeatures.config().features.voidFog;
+        Camera camera = minecraft.gameRenderer.getMainCamera();
+        BlockPos pos = camera.blockPosition();
+        double relativeY = camera.position().y() - minecraft.level.getMinY();
+        int skyLight = minecraft.level.getBrightness(LightLayer.SKY, pos);
+        float color = colorStrength(minecraft.level, camera);
+        float endAtShortDistance = distanceLimit(minecraft.level, camera, 96.0F);
+        float endAtLongDistance = distanceLimit(minecraft.level, camera, 512.0F);
+
+        return Component.literal(String.format(
+                Locale.ROOT,
+                "Void Fog: enabled=%s particles=%s fluid=%s y=%.2f relativeY=%.2f sky=%d color=%.0f%% end@96=%.1f end@512=%.1f",
+                config.enabled,
+                config.particles,
+                camera.getFluidInCamera(),
+                camera.position().y(),
+                relativeY,
+                skyLight,
+                color * 100.0F,
+                endAtShortDistance,
+                endAtLongDistance
+        ));
     }
 
     public static float colorStrength(ClientLevel level, Camera camera) {
@@ -63,7 +95,8 @@ public final class VoidFogClientFeature {
 
         factor = Mth.clamp(factor, 0.0D, 1.0D);
         float targetEnd = Math.max(MIN_FOG_DISTANCE, FOG_DISTANCE_SCALE * (float) (factor * factor));
-        return Mth.lerp(smooth((float) (1.0D - factor)), originalEnd, Math.min(originalEnd, targetEnd));
+        float fade = smooth((float) ((1.0D - factor) / DISTANCE_FADE_RANGE));
+        return Mth.lerp(fade, originalEnd, Math.min(originalEnd, targetEnd));
     }
 
     public static int fogColor(ClientLevel level, Camera camera, int originalColor, float strength) {
@@ -103,7 +136,7 @@ public final class VoidFogClientFeature {
                     && minecraft.level.getRandom().nextInt(PARTICLE_RANDOM_HEIGHT) > particleY
                     && minecraft.level.isEmptyBlock(new BlockPos(x, y, z))) {
                 minecraft.level.addParticle(
-                        ParticleTypes.ASH,
+                        ForgottenFeaturesParticles.DEPTH_SUSPEND,
                         x + minecraft.level.getRandom().nextFloat(),
                         y + minecraft.level.getRandom().nextFloat(),
                         z + minecraft.level.getRandom().nextFloat(),

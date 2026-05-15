@@ -17,3 +17,4 @@ This project intends to use semantic versioning for the mod version, with Minecr
 - Started restoring Void Fog as a toggleable client visual feature.
 - Tuned Void Fog against the old renderer curve from local official-jar research.
 - Smoothed Void Fog's modern renderer integration to avoid sudden transitions and sky/cloud fog artifacts.
+- Added a custom suspended void-fog particle and `/ffvoidfog` client diagnostics for renderer compatibility checks.

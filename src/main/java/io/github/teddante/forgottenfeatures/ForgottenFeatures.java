@@ -4,6 +4,7 @@ import io.github.teddante.forgottenfeatures.config.ForgottenFeaturesConfig;
 import io.github.teddante.forgottenfeatures.command.ForgottenFeaturesCommands;
 import io.github.teddante.forgottenfeatures.registry.ForgottenFeaturesBlocks;
 import io.github.teddante.forgottenfeatures.registry.ForgottenFeaturesItems;
+import io.github.teddante.forgottenfeatures.registry.ForgottenFeaturesParticles;
 import io.github.teddante.forgottenfeatures.registry.ForgottenFeaturesWorldgen;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ public final class ForgottenFeatures implements ModInitializer {
         config = ForgottenFeaturesConfig.load();
         ForgottenFeaturesBlocks.initialize();
         ForgottenFeaturesItems.initialize(config);
+        ForgottenFeaturesParticles.initialize();
         ForgottenFeaturesWorldgen.initialize(config);
         ForgottenFeaturesCommands.initialize();
         LOGGER.info("Forgotten Features initialized");

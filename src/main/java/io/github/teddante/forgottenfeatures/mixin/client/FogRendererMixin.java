@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(FogRenderer.class)
+@Mixin(value = FogRenderer.class, priority = 500)
 public abstract class FogRendererMixin {
     @Inject(method = "setupFog", at = @At("RETURN"))
     private void forgottenfeatures$applyVoidFog(

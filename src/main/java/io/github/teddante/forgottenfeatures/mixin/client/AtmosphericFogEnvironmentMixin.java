@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(AtmosphericFogEnvironment.class)
+@Mixin(value = AtmosphericFogEnvironment.class, priority = 500)
 public abstract class AtmosphericFogEnvironmentMixin {
     @Inject(method = "getBaseColor", at = @At("RETURN"), cancellable = true)
     private void forgottenfeatures$darkenVoidFogColor(
