@@ -20,6 +20,8 @@ final class ForgottenFeaturesConfigTest {
         assertTrue(config.features.ruby.enabled);
         assertTrue(config.features.ruby.showInCreativeTab);
         assertTrue(config.features.ruby.generateOre);
+        assertTrue(config.features.voidFog.enabled);
+        assertTrue(config.features.voidFog.particles);
         assertTrue(Files.exists(configPath));
     }
 
@@ -54,7 +56,9 @@ final class ForgottenFeaturesConfigTest {
 
         assertNotNull(config.features);
         assertNotNull(config.features.ruby);
+        assertNotNull(config.features.voidFog);
         assertTrue(config.features.ruby.enabled);
         assertTrue(config.features.ruby.generateOre);
+        assertTrue(config.features.voidFog.enabled);
     }
 }

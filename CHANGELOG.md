@@ -14,3 +14,4 @@ This project intends to use semantic versioning for the mod version, with Minecr
 - Added `/forgottenfeatures findrubyore [radius]` for quick Ruby Ore generation checks.
 - Tightened agent and project workflow docs around automated verification and launcher test builds.
 - Added local verification and Prism-copy scripts, plus clearer issue/PR/version/release workflow guidance.
+- Started restoring Void Fog as a toggleable client visual feature.

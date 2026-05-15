@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.teddante.forgottenfeatures.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "client.AtmosphericFogEnvironmentMixin",
+    "client.FogRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
+

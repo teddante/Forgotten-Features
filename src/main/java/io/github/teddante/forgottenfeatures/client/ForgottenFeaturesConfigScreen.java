@@ -81,6 +81,41 @@ public final class ForgottenFeaturesConfigScreen extends Screen {
                 })
                 .build());
 
+        addRenderableWidget(new StringWidget(
+                left,
+                top + 164,
+                310,
+                20,
+                Component.translatable("screen.forgottenfeatures.category.visuals"),
+                this.font
+        ));
+
+        addRenderableWidget(Checkbox.builder(
+                        Component.translatable("option.forgottenfeatures.void_fog.enabled"),
+                        this.font
+                )
+                .pos(left, top + 194)
+                .maxWidth(310)
+                .selected(config.features.voidFog.enabled)
+                .onValueChange((checkbox, selected) -> {
+                    config.features.voidFog.enabled = selected;
+                    save();
+                })
+                .build());
+
+        addRenderableWidget(Checkbox.builder(
+                        Component.translatable("option.forgottenfeatures.void_fog.particles"),
+                        this.font
+                )
+                .pos(left, top + 224)
+                .maxWidth(310)
+                .selected(config.features.voidFog.particles)
+                .onValueChange((checkbox, selected) -> {
+                    config.features.voidFog.particles = selected;
+                    save();
+                })
+                .build());
+
         addRenderableWidget(Button.builder(
                         Component.translatable("button.forgottenfeatures.done"),
                         button -> onClose()
