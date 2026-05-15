@@ -15,6 +15,9 @@
   "entrypoints": {
     "main": [
       "io.github.teddante.forgottenfeatures.ForgottenFeatures"
+    ],
+    "modmenu": [
+      "io.github.teddante.forgottenfeatures.client.ForgottenFeaturesModMenu"
     ]
   },
   "depends": {
@@ -22,6 +25,8 @@
     "minecraft": "~26.1.2",
     "java": ">=25",
     "fabric-api": "*"
+  },
+  "suggests": {
+    "modmenu": "*"
   }
 }
-

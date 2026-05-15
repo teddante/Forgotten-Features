@@ -8,3 +8,4 @@ This project intends to use semantic versioning for the mod version, with Minecr
 
 - Bootstrapped a lightweight repository structure, starter documentation, and minimal GitHub hygiene.
 - Started the first Fabric 26.1.2 feature slice with a config-backed Ruby item.
+- Added Mod Menu integration for in-game Ruby toggles when Mod Menu is installed.

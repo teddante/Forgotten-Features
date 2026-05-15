@@ -19,10 +19,12 @@ public final class ForgottenFeaturesItems {
     }
 
     public static void initialize(ForgottenFeaturesConfig config) {
-        if (config.features.ruby.enabled && config.features.ruby.showInCreativeTab) {
-            CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS)
-                    .register(entries -> entries.accept(RUBY));
-        }
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(entries -> {
+            ForgottenFeaturesConfig currentConfig = ForgottenFeatures.config();
+            if (currentConfig.features.ruby.enabled && currentConfig.features.ruby.showInCreativeTab) {
+                entries.accept(RUBY);
+            }
+        });
     }
 
     private static <T extends Item> T register(String name, Function<Item.Properties, T> factory, Item.Properties properties) {
@@ -35,4 +37,3 @@ public final class ForgottenFeaturesItems {
         return item;
     }
 }
-

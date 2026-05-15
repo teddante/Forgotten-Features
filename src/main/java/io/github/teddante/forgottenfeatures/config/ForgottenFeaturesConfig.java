@@ -17,8 +17,12 @@ public final class ForgottenFeaturesConfig {
 
     public Features features = new Features();
 
+    public static Path defaultPath() {
+        return FabricLoader.getInstance().getConfigDir().resolve(FILE_NAME);
+    }
+
     public static ForgottenFeaturesConfig load() {
-        return load(FabricLoader.getInstance().getConfigDir().resolve(FILE_NAME));
+        return load(defaultPath());
     }
 
     public static ForgottenFeaturesConfig load(Path path) {
@@ -52,6 +56,10 @@ public final class ForgottenFeaturesConfig {
         }
     }
 
+    public void save() {
+        save(defaultPath());
+    }
+
     private ForgottenFeaturesConfig normalize() {
         if (features == null) {
             features = new Features();
@@ -71,4 +79,3 @@ public final class ForgottenFeaturesConfig {
         public boolean showInCreativeTab = true;
     }
 }
-

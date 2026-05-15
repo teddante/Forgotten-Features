@@ -24,6 +24,7 @@ The first version adds:
 - English item name
 - Item model and original placeholder texture
 - Config-backed creative tab visibility
+- Mod Menu config screen toggles when Mod Menu is installed
 
 The item is always registered for world safety. Disabling the feature currently hides it from this mod's creative-tab injection rather than removing the registry ID.
 
@@ -34,4 +35,3 @@ Possible next steps after the first playable slice:
 - Recreate ruby ore or ruby block if evidence supports it.
 - Add villager/trading behavior if a faithful design can be supported cleanly.
 - Compare item texture more carefully against historical screenshots without copying Mojang assets.
-

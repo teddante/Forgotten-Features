@@ -124,6 +124,8 @@ Likely categories:
 
 Use simple config files first. Add an in-game config UI when it improves usability. For 2026-era config UI, evaluate YACL and Cloth Config against the selected Minecraft version and loaders instead of committing too early.
 
+For Fabric, Mod Menu is the expected access point for client-side config screens. Small early features can use a lightweight native screen exposed through Mod Menu. Larger future config screens can move to YACL or Cloth Config if the option count grows enough to justify the dependency.
+
 ## Compatibility Rules
 
 - Prefer data-driven systems over code hooks when possible.

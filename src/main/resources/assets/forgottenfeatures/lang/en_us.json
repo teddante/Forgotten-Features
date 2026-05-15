@@ -1,4 +1,10 @@
 {
-  "item.forgottenfeatures.ruby": "Ruby"
+  "item.forgottenfeatures.ruby": "Ruby",
+  "modmenu.summaryTranslation.forgottenfeatures": "Removed, unused, and shelved features rebuilt for Minecraft.",
+  "modmenu.descriptionTranslation.forgottenfeatures": "Historically faithful recreations of removed, unused, shelved, and developer-mentioned Minecraft features.",
+  "screen.forgottenfeatures.config": "Forgotten Features",
+  "screen.forgottenfeatures.category.blocks_items": "Blocks and Items",
+  "option.forgottenfeatures.ruby.enabled": "Enable Ruby",
+  "option.forgottenfeatures.ruby.show_in_creative_tab": "Show Ruby in Ingredients tab",
+  "button.forgottenfeatures.done": "Done"
 }
-
