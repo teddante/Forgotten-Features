@@ -67,16 +67,25 @@ public final class ForgottenFeaturesConfig {
         if (features.ruby == null) {
             features.ruby = new RubyFeature();
         }
+        if (features.voidFog == null) {
+            features.voidFog = new VoidFogFeature();
+        }
         return this;
     }
 
     public static final class Features {
         public RubyFeature ruby = new RubyFeature();
+        public VoidFogFeature voidFog = new VoidFogFeature();
     }
 
     public static final class RubyFeature {
         public boolean enabled = true;
         public boolean showInCreativeTab = true;
         public boolean generateOre = true;
+    }
+
+    public static final class VoidFogFeature {
+        public boolean enabled = true;
+        public boolean particles = true;
     }
 }

@@ -7,8 +7,11 @@
   "modmenu.descriptionTranslation.forgottenfeatures": "Historically faithful recreations of removed, unused, shelved, and developer-mentioned Minecraft features.",
   "screen.forgottenfeatures.config": "Forgotten Features",
   "screen.forgottenfeatures.category.blocks_items": "Blocks and Items",
+  "screen.forgottenfeatures.category.visuals": "Visuals",
   "option.forgottenfeatures.ruby.enabled": "Enable Ruby",
   "option.forgottenfeatures.ruby.show_in_creative_tab": "Show Ruby in Ingredients tab",
   "option.forgottenfeatures.ruby.generate_ore": "Generate Ruby Ore in mountains",
+  "option.forgottenfeatures.void_fog.enabled": "Enable Void Fog",
+  "option.forgottenfeatures.void_fog.particles": "Show Void Fog particles",
   "button.forgottenfeatures.done": "Done"
 }

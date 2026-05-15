@@ -30,8 +30,11 @@ try {
 
     $expectedEntries = @(
         "fabric.mod.json",
+        "forgottenfeatures.mixins.json",
         "assets/forgottenfeatures/lang/en_us.json",
         "assets/forgottenfeatures/items/ruby.json",
+        "assets/forgottenfeatures/particles/depth_suspend.json",
+        "assets/forgottenfeatures/textures/particle/depth_suspend_0.png",
         "data/forgottenfeatures/worldgen/placed_feature/ore_ruby.json"
     )
 
