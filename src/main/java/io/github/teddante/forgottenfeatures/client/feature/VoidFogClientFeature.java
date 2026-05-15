@@ -11,6 +11,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec3;
 
 public final class VoidFogClientFeature {
@@ -20,8 +21,9 @@ public final class VoidFogClientFeature {
     private static final float FOG_DISTANCE_SCALE = 100.0F;
     private static final float MIN_FOG_DISTANCE = 5.0F;
     private static final int PARTICLE_RANGE = 16;
-    private static final int PARTICLE_ATTEMPTS = 120;
+    private static final int PARTICLE_ATTEMPTS = 180;
     private static final int PARTICLE_RANDOM_HEIGHT = 8;
+    private static final int PARTICLE_HEIGHT_OFFSET = 16;
 
     private VoidFogClientFeature() {
     }
@@ -32,7 +34,7 @@ public final class VoidFogClientFeature {
 
     public static float colorStrength(ClientLevel level, Camera camera) {
         ForgottenFeaturesConfig.VoidFogFeature config = ForgottenFeatures.config().features.voidFog;
-        if (!canApply(config, level)) {
+        if (!canApply(config, level, camera)) {
             return 0.0F;
         }
 
@@ -42,12 +44,12 @@ public final class VoidFogClientFeature {
             return 0.0F;
         }
 
-        return (float) (1.0D - factor * factor);
+        return smooth((float) (1.0D - factor * factor));
     }
 
     public static float distanceLimit(ClientLevel level, Camera camera, float originalEnd) {
         ForgottenFeaturesConfig.VoidFogFeature config = ForgottenFeatures.config().features.voidFog;
-        if (!canApply(config, level)) {
+        if (!canApply(config, level, camera)) {
             return originalEnd;
         }
 
@@ -61,15 +63,15 @@ public final class VoidFogClientFeature {
 
         factor = Mth.clamp(factor, 0.0D, 1.0D);
         float targetEnd = Math.max(MIN_FOG_DISTANCE, FOG_DISTANCE_SCALE * (float) (factor * factor));
-        return Math.min(originalEnd, targetEnd);
+        return Mth.lerp(smooth((float) (1.0D - factor)), originalEnd, Math.min(originalEnd, targetEnd));
     }
 
     public static int fogColor(ClientLevel level, Camera camera, int originalColor, float strength) {
-        int target = 0x000000;
-        int red = blend((originalColor >> 16) & 0xFF, (target >> 16) & 0xFF, strength);
-        int green = blend((originalColor >> 8) & 0xFF, (target >> 8) & 0xFF, strength);
-        int blue = blend(originalColor & 0xFF, target & 0xFF, strength);
-        return (red << 16) | (green << 8) | blue;
+        int originalRed = (originalColor >> 16) & 0xFF;
+        int originalGreen = (originalColor >> 8) & 0xFF;
+        int originalBlue = originalColor & 0xFF;
+        int neutral = Math.round((originalRed * 0.30F + originalGreen * 0.59F + originalBlue * 0.11F) * (1.0F - strength));
+        return (neutral << 16) | (neutral << 8) | neutral;
     }
 
     public static float fogStart(float originalStart, float fogEnd) {
@@ -95,10 +97,10 @@ public final class VoidFogClientFeature {
             int x = playerBlock.getX() + minecraft.level.getRandom().nextInt(PARTICLE_RANGE) - minecraft.level.getRandom().nextInt(PARTICLE_RANGE);
             int y = playerBlock.getY() + minecraft.level.getRandom().nextInt(PARTICLE_RANGE) - minecraft.level.getRandom().nextInt(PARTICLE_RANGE);
             int z = playerBlock.getZ() + minecraft.level.getRandom().nextInt(PARTICLE_RANGE) - minecraft.level.getRandom().nextInt(PARTICLE_RANGE);
-            int relativeY = y - minecraft.level.getMinY();
+            int particleY = y - minecraft.level.getMinY() - PARTICLE_HEIGHT_OFFSET;
 
-            if (relativeY >= 0
-                    && minecraft.level.getRandom().nextInt(PARTICLE_RANDOM_HEIGHT) > relativeY
+            if (particleY < PARTICLE_RANDOM_HEIGHT
+                    && minecraft.level.getRandom().nextInt(PARTICLE_RANDOM_HEIGHT) > particleY
                     && minecraft.level.isEmptyBlock(new BlockPos(x, y, z))) {
                 minecraft.level.addParticle(
                         ParticleTypes.ASH,
@@ -113,11 +115,15 @@ public final class VoidFogClientFeature {
         }
     }
 
-    private static boolean canApply(ForgottenFeaturesConfig.VoidFogFeature config, ClientLevel level) {
-        return config.enabled && level.dimension() == Level.OVERWORLD;
+    private static boolean canApply(ForgottenFeaturesConfig.VoidFogFeature config, ClientLevel level, Camera camera) {
+        FogType fogType = camera.getFluidInCamera();
+        return config.enabled
+                && level.dimension() == Level.OVERWORLD
+                && (fogType == FogType.NONE || fogType == FogType.ATMOSPHERIC);
     }
 
-    private static int blend(int original, int target, float strength) {
-        return Mth.clamp(Math.round(Mth.lerp(strength, original, target)), 0, 255);
+    private static float smooth(float value) {
+        float clamped = Mth.clamp(value, 0.0F, 1.0F);
+        return clamped * clamped * (3.0F - 2.0F * clamped);
     }
 }

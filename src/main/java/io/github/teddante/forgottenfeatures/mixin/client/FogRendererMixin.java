@@ -25,12 +25,8 @@ public abstract class FogRendererMixin {
         FogData fogData = cir.getReturnValue();
         float environmentalEnd = VoidFogClientFeature.distanceLimit(level, camera, fogData.environmentalEnd);
         float renderDistanceEnd = VoidFogClientFeature.distanceLimit(level, camera, fogData.renderDistanceEnd);
-        float skyEnd = VoidFogClientFeature.distanceLimit(level, camera, fogData.skyEnd);
-        float cloudEnd = VoidFogClientFeature.distanceLimit(level, camera, fogData.cloudEnd);
         if (environmentalEnd >= fogData.environmentalEnd
-                && renderDistanceEnd >= fogData.renderDistanceEnd
-                && skyEnd >= fogData.skyEnd
-                && cloudEnd >= fogData.cloudEnd) {
+                && renderDistanceEnd >= fogData.renderDistanceEnd) {
             return;
         }
 
@@ -38,7 +34,5 @@ public abstract class FogRendererMixin {
         fogData.environmentalEnd = environmentalEnd;
         fogData.renderDistanceStart = VoidFogClientFeature.fogStart(fogData.renderDistanceStart, renderDistanceEnd);
         fogData.renderDistanceEnd = renderDistanceEnd;
-        fogData.skyEnd = skyEnd;
-        fogData.cloudEnd = cloudEnd;
     }
 }

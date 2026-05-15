@@ -25,15 +25,15 @@ Local reference checks were made against official client jars in ignored `.resea
 The current version adds:
 
 - Low-depth black fog in the Overworld.
-- Fog color mapped to the old squared Y curve, translated onto the modern world bottom.
-- Fog distance mapped to the old sky-light plus `(Y + 4) / 32` curve, translated onto the modern world bottom.
+- Neutral black/gray fog color mapped to the old squared Y curve, translated onto the modern world bottom.
+- Fog distance mapped toward the old sky-light plus `(Y + 4) / 32` curve, translated onto the modern world bottom and smoothed for modern high render distances.
 - Sky-light escape behavior: old sky-light contribution reduces or removes the fog in open shafts.
-- Lightweight gray ash particles using the old 16-block random sampling shape for the old depth-suspend feel.
+- Lightweight gray ash particles using the old 16-block random sampling shape for the old depth-suspend feel, with a modern-height offset so they appear during the visible fog band.
 - Mod Menu toggles for fog and particles.
 
 ## Implementation Notes
 
-The fog uses a narrow client mixin into the modern 26.1 `FogRenderer` / `FogData` path instead of changing world state or server behavior.
+The fog uses a narrow client mixin into the modern 26.1 `FogRenderer` / `FogData` path instead of changing world state or server behavior. It only narrows environmental/render-distance fog and deliberately avoids touching sky/cloud fog distances, which keeps the effect from exposing sky rendering through cave scenes.
 
 Particles use a client tick hook and are visual only. Minecraft's removed `depthsuspend` particle no longer exists in modern Java Edition, so the mod uses `ASH` as a clean modern substitute while preserving the old spawn shape.
 
