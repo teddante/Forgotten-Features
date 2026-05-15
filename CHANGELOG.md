@@ -15,3 +15,4 @@ This project intends to use semantic versioning for the mod version, with Minecr
 - Tightened agent and project workflow docs around automated verification and launcher test builds.
 - Added local verification and Prism-copy scripts, plus clearer issue/PR/version/release workflow guidance.
 - Started restoring Void Fog as a toggleable client visual feature.
+- Tuned Void Fog against the old renderer curve from local official-jar research.

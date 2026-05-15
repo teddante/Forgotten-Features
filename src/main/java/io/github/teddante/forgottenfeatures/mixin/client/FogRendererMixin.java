@@ -22,18 +22,23 @@ public abstract class FogRendererMixin {
             ClientLevel level,
             CallbackInfoReturnable<FogData> cir
     ) {
-        float strength = VoidFogClientFeature.strength(level, camera);
-        if (strength <= 0.0F) {
+        FogData fogData = cir.getReturnValue();
+        float environmentalEnd = VoidFogClientFeature.distanceLimit(level, camera, fogData.environmentalEnd);
+        float renderDistanceEnd = VoidFogClientFeature.distanceLimit(level, camera, fogData.renderDistanceEnd);
+        float skyEnd = VoidFogClientFeature.distanceLimit(level, camera, fogData.skyEnd);
+        float cloudEnd = VoidFogClientFeature.distanceLimit(level, camera, fogData.cloudEnd);
+        if (environmentalEnd >= fogData.environmentalEnd
+                && renderDistanceEnd >= fogData.renderDistanceEnd
+                && skyEnd >= fogData.skyEnd
+                && cloudEnd >= fogData.cloudEnd) {
             return;
         }
 
-        FogData fogData = cir.getReturnValue();
-        fogData.environmentalStart = VoidFogClientFeature.fogStart(fogData.environmentalStart, strength);
-        fogData.environmentalEnd = VoidFogClientFeature.fogEnd(fogData.environmentalEnd, strength);
-        fogData.renderDistanceStart = VoidFogClientFeature.fogStart(fogData.renderDistanceStart, strength);
-        fogData.renderDistanceEnd = VoidFogClientFeature.fogEnd(fogData.renderDistanceEnd, strength);
-        fogData.skyEnd = VoidFogClientFeature.fogEnd(fogData.skyEnd, strength);
-        fogData.cloudEnd = VoidFogClientFeature.fogEnd(fogData.cloudEnd, strength);
+        fogData.environmentalStart = VoidFogClientFeature.fogStart(fogData.environmentalStart, environmentalEnd);
+        fogData.environmentalEnd = environmentalEnd;
+        fogData.renderDistanceStart = VoidFogClientFeature.fogStart(fogData.renderDistanceStart, renderDistanceEnd);
+        fogData.renderDistanceEnd = renderDistanceEnd;
+        fogData.skyEnd = skyEnd;
+        fogData.cloudEnd = cloudEnd;
     }
 }
-

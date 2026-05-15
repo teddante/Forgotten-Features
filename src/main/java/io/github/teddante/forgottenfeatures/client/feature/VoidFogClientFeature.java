@@ -9,13 +9,19 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public final class VoidFogClientFeature {
-    private static final int START_ABOVE_BOTTOM = 26;
-    private static final int FULL_ABOVE_BOTTOM = 4;
-    private static final int PARTICLE_START_ABOVE_BOTTOM = 17;
+    private static final double COLOR_FACTOR = 0.03125D;
+    private static final double DISTANCE_VERTICAL_OFFSET = 4.0D;
+    private static final double DISTANCE_HEIGHT_FACTOR = 32.0D;
+    private static final float FOG_DISTANCE_SCALE = 100.0F;
+    private static final float MIN_FOG_DISTANCE = 5.0F;
+    private static final int PARTICLE_RANGE = 16;
+    private static final int PARTICLE_ATTEMPTS = 120;
+    private static final int PARTICLE_RANDOM_HEIGHT = 8;
 
     private VoidFogClientFeature() {
     }
@@ -24,18 +30,38 @@ public final class VoidFogClientFeature {
         ClientTickEvents.END_CLIENT_TICK.register(VoidFogClientFeature::spawnParticles);
     }
 
-    public static float strength(ClientLevel level, Camera camera) {
+    public static float colorStrength(ClientLevel level, Camera camera) {
         ForgottenFeaturesConfig.VoidFogFeature config = ForgottenFeatures.config().features.voidFog;
-        if (!config.enabled || level.dimension() != Level.OVERWORLD) {
+        if (!canApply(config, level)) {
             return 0.0F;
+        }
+
+        double relativeY = camera.position().y() - level.getMinY();
+        double factor = Mth.clamp(relativeY * COLOR_FACTOR, 0.0D, 1.0D);
+        if (factor >= 1.0D) {
+            return 0.0F;
+        }
+
+        return (float) (1.0D - factor * factor);
+    }
+
+    public static float distanceLimit(ClientLevel level, Camera camera, float originalEnd) {
+        ForgottenFeaturesConfig.VoidFogFeature config = ForgottenFeatures.config().features.voidFog;
+        if (!canApply(config, level)) {
+            return originalEnd;
         }
 
         BlockPos pos = camera.blockPosition();
-        if (level.canSeeSky(pos)) {
-            return 0.0F;
+        double skyLight = level.getBrightness(LightLayer.SKY, pos) / 16.0D;
+        double relativeY = camera.position().y() - level.getMinY();
+        double factor = skyLight + (relativeY + DISTANCE_VERTICAL_OFFSET) / DISTANCE_HEIGHT_FACTOR;
+        if (factor >= 1.0D) {
+            return originalEnd;
         }
 
-        return depthStrength(level, camera.position().y(), START_ABOVE_BOTTOM, FULL_ABOVE_BOTTOM);
+        factor = Mth.clamp(factor, 0.0D, 1.0D);
+        float targetEnd = Math.max(MIN_FOG_DISTANCE, FOG_DISTANCE_SCALE * (float) (factor * factor));
+        return Math.min(originalEnd, targetEnd);
     }
 
     public static int fogColor(ClientLevel level, Camera camera, int originalColor, float strength) {
@@ -46,14 +72,8 @@ public final class VoidFogClientFeature {
         return (red << 16) | (green << 8) | blue;
     }
 
-    public static float fogEnd(float originalEnd, float strength) {
-        float targetEnd = Mth.lerp(strength, 18.0F, 4.0F);
-        return Math.min(originalEnd, Mth.lerp(strength, originalEnd, targetEnd));
-    }
-
-    public static float fogStart(float originalStart, float strength) {
-        float targetStart = Mth.lerp(strength, 4.0F, 0.0F);
-        return Math.min(originalStart, Mth.lerp(strength, originalStart, targetStart));
+    public static float fogStart(float originalStart, float fogEnd) {
+        return Math.min(originalStart, fogEnd * 0.25F);
     }
 
     private static void spawnParticles(Minecraft minecraft) {
@@ -66,24 +86,35 @@ public final class VoidFogClientFeature {
         }
 
         Vec3 playerPos = minecraft.player.position();
-        float strength = depthStrength(minecraft.level, playerPos.y(), PARTICLE_START_ABOVE_BOTTOM, FULL_ABOVE_BOTTOM);
-        if (strength <= 0.0F || minecraft.level.canSeeSky(BlockPos.containing(playerPos))) {
+        BlockPos playerBlock = BlockPos.containing(playerPos);
+        if (minecraft.level.getBrightness(LightLayer.SKY, playerBlock) > 0) {
             return;
         }
 
-        int count = Math.max(1, Math.round(strength * 3.0F));
-        for (int i = 0; i < count; i++) {
-            double x = playerPos.x() + (minecraft.level.getRandom().nextDouble() - 0.5D) * 18.0D;
-            double y = playerPos.y() + (minecraft.level.getRandom().nextDouble() - 0.5D) * 6.0D;
-            double z = playerPos.z() + (minecraft.level.getRandom().nextDouble() - 0.5D) * 18.0D;
-            minecraft.level.addParticle(ParticleTypes.ASH, x, y, z, 0.0D, -0.003D, 0.0D);
+        for (int i = 0; i < PARTICLE_ATTEMPTS; i++) {
+            int x = playerBlock.getX() + minecraft.level.getRandom().nextInt(PARTICLE_RANGE) - minecraft.level.getRandom().nextInt(PARTICLE_RANGE);
+            int y = playerBlock.getY() + minecraft.level.getRandom().nextInt(PARTICLE_RANGE) - minecraft.level.getRandom().nextInt(PARTICLE_RANGE);
+            int z = playerBlock.getZ() + minecraft.level.getRandom().nextInt(PARTICLE_RANGE) - minecraft.level.getRandom().nextInt(PARTICLE_RANGE);
+            int relativeY = y - minecraft.level.getMinY();
+
+            if (relativeY >= 0
+                    && minecraft.level.getRandom().nextInt(PARTICLE_RANDOM_HEIGHT) > relativeY
+                    && minecraft.level.isEmptyBlock(new BlockPos(x, y, z))) {
+                minecraft.level.addParticle(
+                        ParticleTypes.ASH,
+                        x + minecraft.level.getRandom().nextFloat(),
+                        y + minecraft.level.getRandom().nextFloat(),
+                        z + minecraft.level.getRandom().nextFloat(),
+                        0.0D,
+                        0.0D,
+                        0.0D
+                );
+            }
         }
     }
 
-    private static float depthStrength(ClientLevel level, double y, int startAboveBottom, int fullAboveBottom) {
-        double startY = level.getMinY() + startAboveBottom;
-        double fullY = level.getMinY() + fullAboveBottom;
-        return (float) Mth.clamp((startY - y) / (startY - fullY), 0.0D, 1.0D);
+    private static boolean canApply(ForgottenFeaturesConfig.VoidFogFeature config, ClientLevel level) {
+        return config.enabled && level.dimension() == Level.OVERWORLD;
     }
 
     private static int blend(int original, int target, float strength) {

@@ -19,7 +19,7 @@ public abstract class AtmosphericFogEnvironmentMixin {
             float renderDistance,
             CallbackInfoReturnable<Integer> cir
     ) {
-        float strength = VoidFogClientFeature.strength(level, camera);
+        float strength = VoidFogClientFeature.colorStrength(level, camera);
         if (strength <= 0.0F) {
             return;
         }
