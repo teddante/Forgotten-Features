@@ -26,7 +26,7 @@ The current version adds:
 
 - Low-depth black fog in the Overworld.
 - Neutral black/gray fog color mapped to the old squared Y curve, translated onto the modern world bottom.
-- Fog distance mapped toward the old sky-light plus `(Y + 4) / 32` curve, translated onto the modern world bottom, with a short fade-in band before it reaches the old target distance.
+- Environmental fog distance mapped toward the old sky-light plus `(Y + 4) / 32` curve, translated onto the modern world bottom, with a short fade-in band before it reaches the old target distance.
 - Sky-light escape behavior: old sky-light contribution reduces or removes the fog in open shafts.
 - Custom gray suspended particles using the old 16-block random sampling shape for the old depth-suspend feel, with a modern-height offset so they appear during the visible fog band.
 - Mod Menu toggles for fog and particles.
@@ -34,7 +34,7 @@ The current version adds:
 
 ## Implementation Notes
 
-The fog uses a narrow client mixin into the modern 26.1 `FogRenderer` / `FogData` path instead of changing world state or server behavior. It only narrows environmental/render-distance fog and deliberately avoids touching sky/cloud fog distances, which keeps the effect from exposing sky rendering through cave scenes. The mixins use lower priority so they apply after common fog-setting mixins such as Sodium Extra's fog multipliers.
+The fog uses a narrow client mixin into the modern 26.1 `FogRenderer` / `FogData` path instead of changing world state or server behavior. It only narrows environmental fog and deliberately avoids render-distance, sky, and cloud fog distances. That keeps Sodium/Iris fog occlusion from culling terrain and exposing sky rendering through cave scenes. The mixins use lower priority so they apply after common fog-setting mixins such as Sodium Extra's fog multipliers.
 
 Particles use a client tick hook and are visual only. Minecraft's removed `depthsuspend` particle no longer exists in modern Java Edition, so the mod registers a tiny clean-room suspended particle rather than relying on `ASH`, which drifts downward.
 
