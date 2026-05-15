@@ -2,7 +2,6 @@
 .gradle/
 build/
 **/build/
-!gradle/wrapper/gradle-wrapper.jar
 
 # IntelliJ IDEA
 .idea/
@@ -29,6 +28,7 @@ crash-reports/
 *.jar.disabled
 *.litemod
 *.hprof
+!gradle/wrapper/gradle-wrapper.jar
 
 # OS files
 .DS_Store

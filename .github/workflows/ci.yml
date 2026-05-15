@@ -57,4 +57,4 @@ jobs:
       - name: Build when Gradle exists
         if: hashFiles('gradlew') != ''
         shell: bash
-        run: ./gradlew build --no-daemon
+        run: bash ./gradlew build --no-daemon

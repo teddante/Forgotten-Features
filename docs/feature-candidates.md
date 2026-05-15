@@ -28,7 +28,7 @@ Suggested categories:
 | Feature | Category | Evidence | Notes |
 | --- | --- | --- | --- |
 | Giant | Mobs and AI | Existing/unused legacy feature | Good early test for entity behavior and config toggles. |
-| Ruby | Blocks and items | Removed/replaced concept | Good early item/block recreation candidate. |
+| Ruby | Blocks and items | Intended as original trading currency; shown in Jeb's May 21, 2012 trading screenshot; replaced by emeralds. | First implementation slice: `forgottenfeatures:ruby`, config-backed creative visibility, original recreated texture. |
 | Quiver | Blocks and items | Removed/unused concept | Good item and equipment candidate, needs behavior decision. |
 
 ## Medium Priority
@@ -46,4 +46,3 @@ Suggested categories:
 
 | Feature | Category | Evidence | Notes |
 | --- | --- | --- | --- |
-

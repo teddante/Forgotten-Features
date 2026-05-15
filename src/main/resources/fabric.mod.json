@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "forgottenfeatures",
+  "version": "${version}",
+  "name": "Forgotten Features",
+  "description": "Historically faithful recreations of removed, unused, shelved, and developer-mentioned Minecraft features.",
+  "authors": [
+    "Ted Enston"
+  ],
+  "contact": {
+    "sources": "https://github.com/teddante/Forgotten-Features"
+  },
+  "license": "GPL-3.0-only",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.teddante.forgottenfeatures.ForgottenFeatures"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.2",
+    "minecraft": "~26.1.2",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}
+

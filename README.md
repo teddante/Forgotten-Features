@@ -2,7 +2,7 @@
 
 Historically faithful, clean-room recreations of removed, unused, shelved, and developer-mentioned features for Minecraft Java Edition.
 
-**Status:** project bootstrap. No playable mod builds are published yet.
+**Status:** first Fabric feature slice in progress. No public mod builds are published yet.
 
 > NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.
 
@@ -31,6 +31,8 @@ Historically faithful, clean-room recreations of removed, unused, shelved, and d
 | Quilt | Compatibility-tested | Expected through the Fabric build first, unless Quilt-specific support becomes necessary. |
 
 The repo starts with simple placeholder folders for `common/`, `fabric/`, `neoforge/`, and `forge/`. Actual build tooling will be added once the first Minecraft target version is chosen.
+
+The first build target is Fabric for Minecraft 26.1.2. NeoForge is the next planned loader once the first feature/config pattern is proven.
 
 ## Feature Philosophy
 
